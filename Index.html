@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#111111" />
+  <meta name="description" content="Portafolio de diseño de Carlos Santiago Delgado Oliva: arte, carátulas, emprendimientos y playeras." />
+  <title>Portafolio de Diseño — Carlos Santiago</title>
+  <!-- Respaldo para quien no tenga Engravers MT / Arial Narrow instaladas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Roboto+Condensed&display=swap" />
+  <link rel="stylesheet" href="Style.css" />
+</head>
+<body>
+  <header class="hero" id="inicio">
+    <figure class="hero-img"><img id="heroImg" alt="Ramona, personaje diseñado con la técnica de photobashing" fetchpriority="high" /></figure>
+    <div class="hero-text">
+      <p class="eyebrow">Diseño · Arte · Identidad</p>
+      <h1 class="hero-title"><span class="title-line">Portafolio de</span><span class="title-line">Diseño</span></h1>
+      <p class="subtitle" id="heroName"></p>
+      <a class="hero-link" href="#sobre-mi">Explorar portafolio <span aria-hidden="true">↓</span></a>
+    </div>
+    <p class="hero-caption" id="heroCaption"></p>
+  </header>
+
+  <nav id="nav"></nav>
+  <main id="main"></main>
+  <footer><p>© <span id="year"></span> <span id="footName"></span></p></footer>
+
+  <dialog id="lb"><img alt="" /></dialog>
+
+  <script src="Data.js"></script>
+  <script>
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const $ = (s) => document.querySelector(s);
+    const skillSymbols = {
+      cloud: '<path d="M7.5 18H6a4 4 0 0 1-.4-8A6.5 6.5 0 0 1 18 9a4.5 4.5 0 0 1 0 9h-1.5"></path>',
+      image: '<rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="8.5" cy="9" r="1.5"></circle><path d="m21 15-5-5L5 20"></path>',
+      audio: '<path d="M3 10v4m4-8v12m4-15v18m4-14v10m4-7v4m4-6v8"></path>',
+      video: '<rect x="3" y="6" width="13" height="12" rx="2"></rect><path d="m16 10 5-3v10l-5-3z"></path>',
+    };
+    const skillBadge = (skill) => {
+      const badge = SKILL_BADGES[skill] || {};
+      const info = badge.base ? SKILL_BADGES[badge.base] : badge;
+      const name = badge.base || skill;
+      const logo = info.logo
+        ? `<img src="https://img.shields.io/badge/${encodeURIComponent(name).replace(/%20/g, "_")}-${info.color}?style=for-the-badge&amp;logo=${encodeURIComponent(info.logo)}&amp;logoColor=${info.logoColor}" alt="" loading="lazy" />`
+        : `<span class="skill-generic-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${skillSymbols[badge.symbol] || ""}</svg></span>`;
+      return `<span class="skill-badge" title="${esc(skill)}">${logo}${badge.level ? `<span class="skill-level">${esc(badge.level)}</span>` : ""}</span>`;
+    };
+    const foldCards = (items, label) => `
+      <div class="fold-cards" role="group" aria-label="${esc(label)}">
+        ${items.map((item, index) => `
+          <button class="fold-card" type="button" aria-expanded="false">
+            <span class="fold-rail"><span>${esc(item.short || item.title)}</span></span>
+            <span class="fold-content">
+              <span class="fold-title">${esc(item.title)}</span>
+              <span class="fold-meta">${esc(item.place)} · ${esc(item.period)}</span>
+            </span>
+            <span class="fold-number" aria-hidden="true">0${index + 1}</span>
+          </button>`).join("")}
+      </div>`;
+
+    // Bienvenida
+    $("#heroImg").src = encodeURI(SITE.hero);
+    $("#heroName").textContent = SITE.name;
+    $("#heroCaption").textContent = SITE.heroCaption;
+    $("#footName").textContent = SITE.name;
+    $("#year").textContent = new Date().getFullYear();
+
+    // Sobre mí / CV
+    const c = CV.contact;
+    const phoneDigits = c.phone.replace(/\D/g, "");
+    const contactLinks = [
+      c.email && `<a class="contact-link contact-email" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=${encodeURIComponent(c.email)}" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg>
+        <span><small>Correo electrónico</small><strong>${esc(c.email)}</strong></span><span class="contact-arrow" aria-hidden="true">↗</span>
+      </a>`,
+      phoneDigits && `<a class="contact-link contact-whatsapp" href="https://wa.me/${phoneDigits}" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.7a8.6 8.6 0 0 1-12.7 7.5L3 20.5l1.4-4.6a8.6 8.6 0 1 1 16.1-4.2Z"></path><path d="M8.2 7.7c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.4l.8 1.8c.1.2.1.4-.1.6l-.6.7c-.2.2-.2.4 0 .6.5.9 1.2 1.6 2.1 2.1.2.1.4.1.6-.1l.8-1c.2-.2.4-.3.7-.2l1.7.8c.3.1.4.3.4.5 0 .3-.2 1.2-.8 1.6-.5.4-1.2.7-2 .6-1.1-.1-2.5-.7-3.8-1.8-1.1-.9-2-2.2-2.3-3.2-.4-1.1-.1-2.2.3-2.9Z"></path></svg>
+        <span><small>WhatsApp directo</small><strong>${esc(c.phone)}</strong></span><span class="contact-arrow" aria-hidden="true">↗</span>
+      </a>`,
+    ].filter(Boolean);
+
+    const aboutHTML = `
+      <section class="about-section" id="sobre-mi">
+        <div class="about-heading">
+          <div>
+            <h2 class="frame">Sobre mí</h2>
+            <p class="about-kicker">Desarrollo de software · Diseño de interfaces · Sistemas</p>
+          </div>
+          <div class="about-terminal">
+            <div class="terminal-toolbar" aria-hidden="true">
+              <span></span><span></span><span></span>
+              <p>carlos@portafolio: ~/perfil</p>
+            </div>
+            <p class="terminal-prompt"><span>carlos@portafolio</span>:<b>~</b>$ whoami</p>
+            <p class="terminal-output">${esc(CV.about)}<span class="terminal-cursor" aria-hidden="true"></span></p>
+            <p class="terminal-prompt"><span>carlos@portafolio</span>:<b>~</b>$ cat enfoque.txt</p>
+            <p class="terminal-output">Full-stack · React Native · UI/UX · Linux</p>
+          </div>
+        </div>
+        ${CV.experience.length ? `
+          <div class="about-block">
+            <h3>Experiencia</h3>
+            <div class="experience-list">${CV.experience.map((e) => `
+              <article class="experience-entry">
+                <p class="entry-period">${esc(e.period)}</p>
+                <div><h4>${esc(e.title)}</h4><p class="entry-place">${esc(e.place)}</p><p>${esc(e.detail)}</p></div>
+              </article>`).join("")}
+            </div>
+          </div>` : ""}
+        <div class="about-columns">
+          ${CV.education.length ? `
+            <div class="about-block">
+              <h3>Educación</h3>
+              ${foldCards(CV.education, "Formación académica")}
+            </div>` : ""}
+          ${CV.certifications.length ? `
+            <div class="about-block">
+              <h3>Certificaciones</h3>
+              ${foldCards(CV.certifications, "Certificaciones")}
+            </div>` : ""}
+        </div>
+        ${CV.skills.length ? `
+          <div class="about-block skills-block">
+            <h3>Herramientas y conocimientos</h3>
+            <div class="skill-groups">${CV.skills.map((group) => `
+              <div class="skill-group"><h4>${esc(group.title)}</h4><div class="skill-tags">${group.items.map(skillBadge).join("")}</div></div>`).join("")}
+            </div>
+          </div>` : ""}
+        ${contactLinks.length ? `
+          <div class="contact-block">
+            <h3>Información de contacto</h3>
+            <div class="contact-links">${contactLinks.join("")}</div>
+          </div>` : ""}
+      </section>`;
+
+    // Galerías
+    const renderItems = (files, folder) => files.map((file) => {
+      const f = typeof file === "string" ? file : file.f;
+      const bg = typeof file === "string" ? "" : file.bg;
+      const src = encodeURI(folder + f);
+      const style = bg ? ` style="background:${esc(bg)}"` : "";
+      return `<div class="item"${style}><img loading="lazy" src="${src}" alt="${esc(f.replace(/\.[^.]+$/, ""))}"${style} /></div>`;
+    }).join("");
+
+    const systems = GALLERIES.find((g) => g.id === "sistemas");
+    const systemsHTML = systems ? `
+      <section class="gallery gallery-sistemas" id="sistemas">
+        <div class="systems-heading">
+          <div>
+            <h2 class="frame">${esc(systems.title)}</h2>
+            ${systems.subtitle ? `<h3>${esc(systems.subtitle)}</h3>` : ""}
+          </div>
+        </div>
+        <div class="system-projects">
+          ${systems.groups.map((group, index) => `
+            <article class="system-project">
+              <header class="system-project-heading">
+                <p class="system-index">0${index + 1}</p>
+                <h3>${esc(group.title)}</h3>
+                <p>${String(group.files.length).padStart(2, "0")} pantallas</p>
+              </header>
+              <div class="system-carousel" data-system-carousel aria-label="Carrusel automático de ${esc(group.title)}">
+                <div class="system-carousel-stage" id="system-track-${index}" tabindex="0" role="region" aria-label="Pantallas de ${esc(group.title)}">
+                  ${renderItems(group.files, systems.folder)}
+                  <button class="system-carousel-control system-carousel-prev" type="button" data-system-step="-1" aria-label="Ver pantalla anterior de ${esc(group.title)}">←</button>
+                  <button class="system-carousel-control system-carousel-next" type="button" data-system-step="1" aria-label="Ver pantalla siguiente de ${esc(group.title)}">→</button>
+                </div>
+                <p class="system-carousel-status" aria-live="polite">01 / ${String(group.files.length).padStart(2, "0")}</p>
+              </div>
+            </article>
+          `).join("")}
+        </div>
+      </section>` : "";
+
+    const galleryHTML = GALLERIES.filter((g) => g.id !== "sistemas").map((g) => {
+      const carousel = g.layout === "carousel";
+      const items = renderItems(g.files, g.folder);
+
+      return `
+        <section class="gallery gallery-${esc(g.id)} gallery-layout-${esc(g.layout)}" id="${esc(g.id)}">
+          <h2 class="frame">${esc(g.title)}</h2>
+          ${g.subtitle ? `<h3>${esc(g.subtitle)}</h3>` : ""}
+          ${carousel ? `
+            <div class="carousel-toolbar">
+              <p>Desliza para descubrir la colección</p>
+              <div class="carousel-controls">
+                <button type="button" data-carousel="${esc(g.id)}" data-direction="-1" aria-label="Ver obras anteriores">←</button>
+                <button type="button" data-carousel="${esc(g.id)}" data-direction="1" aria-label="Ver obras siguientes">→</button>
+              </div>
+            </div>` : ""}
+          <div class="grid layout-${esc(g.layout)}"${carousel ? ` id="${esc(g.id)}-track" tabindex="0" role="region" aria-label="Carrusel de ${esc(g.title)}"` : ""}>
+            ${items}
+          </div>
+        </section>`;
+    }).join("");
+
+    $("#main").innerHTML = aboutHTML + systemsHTML + galleryHTML;
+
+    // Navegación
+    const links = [
+      { id: "inicio", t: "Inicio" },
+      { id: "sobre-mi", t: "Sobre mí" },
+      ...(systems ? [{ id: systems.id, t: systems.title }] : []),
+      ...GALLERIES.filter((g) => g.id !== "sistemas").map((g) => ({ id: g.id, t: g.title })),
+    ];
+    $("#nav").innerHTML = links.map((l) => `<a href="#${l.id}">${esc(l.t)}</a>`).join("");
+
+    // Reveal sections as they enter the viewport.
+    const revealTargets = document.querySelectorAll("main > section");
+    if ("IntersectionObserver" in window) {
+      revealTargets.forEach((section) => section.classList.add("reveal"));
+      const observer = new IntersectionObserver((entries, currentObserver) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          currentObserver.unobserve(entry.target);
+        });
+      }, { threshold: 0.08 });
+      revealTargets.forEach((section) => observer.observe(section));
+    }
+
+    // Coverflow carousels cycle automatically while visible and respect reduced motion.
+    const systemCarousels = document.querySelectorAll(".system-carousel");
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    systemCarousels.forEach((carousel) => {
+      const stage = carousel.querySelector(".system-carousel-stage");
+      const slides = [...stage.querySelectorAll(".item")];
+      const status = carousel.querySelector(".system-carousel-status");
+      let activeIndex = 0;
+      let timer = 0;
+      let isVisible = false;
+      let isPaused = false;
+
+      if (slides.length === 2) {
+        const duplicate = slides[1].cloneNode(true);
+        duplicate.classList.add("system-slide-duplicate");
+        duplicate.setAttribute("aria-hidden", "true");
+        stage.insertBefore(duplicate, stage.querySelector(".system-carousel-prev"));
+      }
+
+      const render = () => {
+        const previousIndex = (activeIndex - 1 + slides.length) % slides.length;
+        const nextIndex = (activeIndex + 1) % slides.length;
+        slides.forEach((slide, index) => {
+          slide.classList.remove("is-center", "is-left", "is-right");
+          slide.setAttribute("aria-hidden", "true");
+          if (index === activeIndex) {
+            slide.classList.add("is-center");
+            slide.setAttribute("aria-hidden", "false");
+          } else if (index === previousIndex) {
+            slide.classList.add("is-left");
+          } else if (index === nextIndex) {
+            slide.classList.add("is-right");
+          }
+        });
+        const duplicate = stage.querySelector(".system-slide-duplicate");
+        if (duplicate) {
+          duplicate.classList.remove("is-center", "is-left", "is-right");
+          duplicate.classList.toggle("is-right", previousIndex === nextIndex);
+        }
+        status.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+      };
+
+      const stop = () => {
+        window.clearInterval(timer);
+        timer = 0;
+      };
+      const start = () => {
+        stop();
+        if (!isVisible || isPaused || motionPreference.matches || slides.length < 2) return;
+        timer = window.setInterval(() => {
+          activeIndex = (activeIndex + 1) % slides.length;
+          render();
+        }, 3600);
+      };
+      const step = (direction) => {
+        activeIndex = (activeIndex + direction + slides.length) % slides.length;
+        render();
+        if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) isPaused = false;
+        start();
+      };
+
+      render();
+      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        carousel.addEventListener("pointerenter", () => { isPaused = true; stop(); });
+        carousel.addEventListener("pointerleave", () => { isPaused = false; start(); });
+      }
+      carousel.addEventListener("focusin", () => { isPaused = true; stop(); });
+      carousel.addEventListener("focusout", (event) => {
+        if (!carousel.contains(event.relatedTarget)) { isPaused = false; start(); }
+      });
+      carousel.querySelector(".system-carousel-prev").addEventListener("click", () => step(-1));
+      carousel.querySelector(".system-carousel-next").addEventListener("click", () => step(1));
+      motionPreference.addEventListener("change", start);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) stop();
+        else start();
+      });
+      if ("IntersectionObserver" in window) {
+        const carouselObserver = new IntersectionObserver((entries) => {
+          isVisible = entries[0].isIntersecting;
+          if (!isVisible) stop();
+          else start();
+        }, { threshold: 0.12 });
+        carouselObserver.observe(carousel);
+      } else {
+        isVisible = true;
+        start();
+      }
+    });
+
+    const activateFoldCard = (card) => {
+      const group = card.closest(".fold-cards");
+      group.querySelectorAll(".fold-card").forEach((item) => {
+        const active = item === card;
+        item.classList.toggle("is-open", active);
+        item.setAttribute("aria-expanded", String(active));
+      });
+    };
+
+    document.addEventListener("focusin", (event) => {
+      const foldCard = event.target.closest(".fold-card");
+      if (foldCard) activateFoldCard(foldCard);
+    });
+
+    // Navegación de carruseles
+    document.addEventListener("click", (e) => {
+      const foldCard = e.target.closest(".fold-card");
+      if (foldCard) {
+        activateFoldCard(foldCard);
+        return;
+      }
+
+      const button = e.target.closest("[data-carousel]");
+      if (!button) return;
+      const track = document.getElementById(`${button.dataset.carousel}-track`);
+      if (track) track.scrollBy({ left: track.clientWidth * 0.8 * Number(button.dataset.direction), behavior: "smooth" });
+    });
+
+    // Lightbox
+    const lb = $("#lb"), lbImg = lb.querySelector("img");
+    document.addEventListener("click", (e) => {
+      const img = e.target.closest(".item img");
+      if (img) { lbImg.src = img.src; lbImg.style.background = img.style.background; lb.showModal(); }
+    });
+    lb.addEventListener("click", () => lb.close());
+  </script>
+</body>
+</html>
