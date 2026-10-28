@@ -3,7 +3,7 @@
 
 const SITE = {
   name: "Carlos Santiago Delgado Oliva",
-  hero: "Assets/art/RAMON.jpeg", // imagen de bienvenida (Ramona)
+  hero: "assets/art/RAMON.jpeg", // imagen de bienvenida (Ramona)
   heroCaption: "*Ramona | Personaje diseñado bajo la técnica “Photobashing”",
 };
 
@@ -123,22 +123,22 @@ const SKILL_BADGES = {
 const GALLERIES = [
   {
     id: "arte", title: "Arte", subtitle: "Ilustración y piezas gráficas", layout: "atelier",
-    folder: "Assets/art/",
+    folder: "assets/art/",
     files: ["fisher of men.png", "Know who you are at every age.png", "los niños.png", "LAMB.jpeg", "loveme.png", "mcc.png", "RAMON.jpeg", "rojoflyer.png", "saulodetarso.png"],
   },
   {
     id: "caratulas", title: "Carátulas", subtitle: "Diseño de portadas", layout: "records",
-    folder: "Assets/caratulas/",
+    folder: "assets/caratulas/",
     files: ["CARA1.jpg", "CARA2.jpg", "CARA3.jpg", "CARA4.jpg", "CARA5.jpg", "Complejo.png"],
   },
   {
     id: "emprendimientos", title: "Emprendimientos", subtitle: "Branding y productos", layout: "boutique",
-    folder: "Assets/emprendimientos/",
+    folder: "assets/emprendimientos/",
     files: ["CUKIS.jpeg", "GARAB1.jpeg", "GARAB2.jpeg", "GARAB3.jpeg", "GARAB4.jpeg"],
   },
   {
     id: "playeras", title: "Playeras", subtitle: "Diseños estampados", layout: "printshop",
-    folder: "Assets/playeras/",
+    folder: "assets/playeras/",
     files: [
       "ARTILLERIA PESADA.png", "BAILANDOCUMBIANEGRO.png", "GUITARDOG.png", "IWANTTOBELIEVE.png",
       "JUSTONEOFTHOSEDAYS.png", "LainPlayeraFONDO.png",
@@ -148,7 +148,7 @@ const GALLERIES = [
   },
   {
     id: "sistemas", title: "Sistemas", subtitle: "Interfaces y proyectos digitales",
-    folder: "Assets/sistemas/",
+    folder: "assets/sistemas/",
     groups: [
       { title: "Burguer", files: ["burguer1.png", "burguer2.png", "burguer3.png", "burguer4.png"] },
       { title: "Monitor", files: ["monitor1.png", "monitor2.png", "monitor3.png", "monitor4.png", "monitor5.png"] },
